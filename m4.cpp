@@ -58,29 +58,28 @@ int main() {
         customShader[i] = Shader("./shader.vs", "./shader.fs");
     }
 
-    float vertices[] = {
+    unsigned int VBO, VAO, EBO;
+
+    unsigned int index[] = {
+        0, 1, 3,
+        1, 2, 3
+    };
+
+    float vortex[] = {
          1.0f,  1.0f, 0.0f,   1.0f, 0.0f,
          1.0f, -1.0f, 0.0f,   1.0f, 1.0f,
         -1.0f, -1.0f, 0.0f,   0.0f, 1.0f,
         -1.0f,  1.0f, 0.0f,   0.0f, 0.0f
     };
 
-    unsigned int indices[] = {
-        0, 1, 3,
-        1, 2, 3
-    };
-    unsigned int VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
-
+    glGenBuffers(1, &VBO);
     glBindVertexArray(VAO);
-
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vortex), vortex, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index), index, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
@@ -108,10 +107,10 @@ int main() {
         rscPath += customTexture[i];
         unsigned char *data = stbi_load(rscPath.c_str(), &width, &height, &nrChannels, 0); //
         if (data) {
-            cout << "rscPath =" << rscPath << " | "; // Debug
-            cout << "nrChannels =" << nrChannels << " | "; // Debug
-            cout << "width =" << width << " | "; // Debug
-            cout << "height =" << height << endl; // Debug
+            cout << "rscPath =" << rscPath << " | "; 
+            cout << "nrChannels =" << nrChannels << " | "; 
+            cout << "width =" << width << " | "; 
+            cout << "height =" << height << endl; 
             (nrChannels == 3) ?
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data) :
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -130,9 +129,7 @@ int main() {
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
         glBindVertexArray(VAO);
-
         glBindTexture(GL_TEXTURE_2D, texture[0]);
         glm::mat4 transform0 = glm::mat4(1.0f);
         transform0 = glm::scale(transform0, glm::vec3(1.235, 1.235, 1.235));
